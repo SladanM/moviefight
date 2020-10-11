@@ -1,3 +1,5 @@
+
+
 const debounce = (func, delay = 800) => {
   let timeoutId;
   return (...args) => {
@@ -9,3 +11,9 @@ const debounce = (func, delay = 800) => {
     }, delay);
   };
 };
+
+document.addEventListener('click', (event) => {
+  if (!root.contains(event.target)) {
+    dropdown.classList.remove('is-active');
+  }
+});
