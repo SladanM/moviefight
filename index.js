@@ -1,5 +1,3 @@
-
-
 createAutoComplete({
   root: document.querySelector('.autocomplete'),
   renderOption(movie){
