@@ -19,6 +19,12 @@ const createAutoComplete = ({
   const dropdown = root.querySelector('.dropdown');
   const resultsWrapper = root.querySelector('.results');
 
+  document.addEventListener('click', (event) => {
+    if (!root.contains(event.target)) {
+      dropdown.classList.remove('is-active');
+    }
+  });
+
   const onInput = async (event) => {
     const items = await fetchData(event.target.value);
 
@@ -42,5 +48,18 @@ const createAutoComplete = ({
       resultsWrapper.appendChild(option);
     }
   };
+
+  const debounce = (func, delay = 800) => {
+    let timeoutId;
+    return (...args) => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(() => {
+        func.apply(null, args);
+      }, delay);
+    };
+  };
+
   input.addEventListener('input', debounce(onInput, 750));
 };

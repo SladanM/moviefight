@@ -1,5 +1,18 @@
 createAutoComplete({
   root: document.querySelector('.autocomplete'),
+
+  async fetchData(searchTerm) {
+    const response = await axios.get('http://www.omdbapi.com/', {
+      params: {
+        apikey: '5a3b8379',
+        s: searchTerm,
+      },
+    });
+    if (response.data.Error) {
+      return [];
+    }
+    return response.data.Search;
+  },
   renderOption(item) {
     const imgSRC = item.Poster === 'N/A' ? '' : item.Poster;
     return `
@@ -12,18 +25,6 @@ createAutoComplete({
   },
   inputValue(item) {
     return item.Title;
-  },
-  async fetchData(searchTerm) {
-    const response = await axios.get('http://www.omdbapi.com/', {
-      params: {
-        apikey: '5a3b8379',
-        s: searchTerm,
-      },
-    });
-    if (response.data.Error) {
-      return [];
-    }
-    return response.data.Search;
   },
 });
 
