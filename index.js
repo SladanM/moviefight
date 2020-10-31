@@ -1,6 +1,4 @@
-createAutoComplete({
-  root: document.querySelector('.autocomplete'),
-
+const autoCompleteConfig = {
   async fetchData(searchTerm) {
     const response = await axios.get('http://www.omdbapi.com/', {
       params: {
@@ -20,22 +18,37 @@ createAutoComplete({
     ${item.Title} (${item.Year})
     `;
   },
-  onOptionSelect(item) {
-    onMovieSelect(item);
-  },
   inputValue(item) {
     return item.Title;
   },
+};
+
+createAutoComplete({
+  ...autoCompleteConfig,
+  root: document.querySelector('#left-autocomplete'),
+  onOptionSelect(item) {
+    document.querySelector('.tutorial').classList.add('is-hidden');
+    onMovieSelect(item, document.querySelector('#left-summary'));
+  },
 });
 
-const onMovieSelect = async (item) => {
+createAutoComplete({
+  ...autoCompleteConfig,
+  root: document.querySelector('#right-autocomplete'),
+  onOptionSelect(item) {
+    document.querySelector('.tutorial').classList.add('is-hidden');
+    onMovieSelect(item, document.querySelector('#right-summary'));
+  },
+});
+
+const onMovieSelect = async (item, summaryElement) => {
   const response = await axios.get('http://www.omdbapi.com/', {
     params: {
       apikey: '5a3b8379',
       i: item.imdbID,
     },
   });
-  document.querySelector('#summary').innerHTML = movieTemplate(response.data);
+  summaryElement.innerHTML = movieTemplate(response.data);
 };
 
 const movieTemplate = (item) => {
