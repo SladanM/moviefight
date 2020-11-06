@@ -1,3 +1,5 @@
+// AUTOCOMPLETE REUSABLE BASIS
+
 const createAutoComplete = ({
   root,
   renderOption,
@@ -5,6 +7,7 @@ const createAutoComplete = ({
   inputValue,
   fetchData,
 }) => {
+  // WHERE
   root.innerHTML = `
     <label><b>Search</b></label>
     <input class="input"/>
@@ -15,16 +18,12 @@ const createAutoComplete = ({
     </div>
     `;
 
+  // SELECTING THE DIVS
   const input = root.querySelector('input');
   const dropdown = root.querySelector('.dropdown');
   const resultsWrapper = root.querySelector('.results');
 
-  document.addEventListener('click', (event) => {
-    if (!root.contains(event.target)) {
-      dropdown.classList.remove('is-active');
-    }
-  });
-
+  // WHEN TYPING
   const onInput = async (event) => {
     const items = await fetchData(event.target.value);
 
@@ -33,6 +32,7 @@ const createAutoComplete = ({
       return;
     }
 
+    // RESULTS DIV
     resultsWrapper.innerHTML = '';
     dropdown.classList.add('is-active');
     for (let item of items) {
@@ -48,6 +48,12 @@ const createAutoComplete = ({
       resultsWrapper.appendChild(option);
     }
   };
+
+  document.addEventListener('click', (event) => {
+    if (!root.contains(event.target)) {
+      dropdown.classList.remove('is-active');
+    }
+  });
 
   const debounce = (func, delay = 800) => {
     let timeoutId;

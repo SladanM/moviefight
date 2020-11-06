@@ -11,6 +11,7 @@ const autoCompleteConfig = {
     }
     return response.data.Search;
   },
+  // ITEM RENDER STRUCTURE
   renderOption(item) {
     const imgSRC = item.Poster === 'N/A' ? '' : item.Poster;
     return `
@@ -26,6 +27,7 @@ const autoCompleteConfig = {
 createAutoComplete({
   ...autoCompleteConfig,
   root: document.querySelector('#left-autocomplete'),
+  // ONOPTION IS ONMOVIE FUNCTION
   onOptionSelect(item) {
     document.querySelector('.tutorial').classList.add('is-hidden');
     onMovieSelect(item, document.querySelector('#left-summary'));
@@ -35,12 +37,14 @@ createAutoComplete({
 createAutoComplete({
   ...autoCompleteConfig,
   root: document.querySelector('#right-autocomplete'),
+  // ONOPTION IS ONMOVIE FUNCTION
   onOptionSelect(item) {
     document.querySelector('.tutorial').classList.add('is-hidden');
     onMovieSelect(item, document.querySelector('#right-summary'));
   },
 });
 
+// MOVIE CLICKED
 const onMovieSelect = async (item, summaryElement) => {
   const response = await axios.get('http://www.omdbapi.com/', {
     params: {
@@ -51,6 +55,7 @@ const onMovieSelect = async (item, summaryElement) => {
   summaryElement.innerHTML = movieTemplate(response.data);
 };
 
+// MOVIE ITEM STRUCTURE
 const movieTemplate = (item) => {
   return `
   <article class="media">
