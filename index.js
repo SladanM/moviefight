@@ -30,7 +30,7 @@ createAutoComplete({
   // ONOPTION IS ONMOVIE FUNCTION
   onOptionSelect(item) {
     document.querySelector('.tutorial').classList.add('is-hidden');
-    onMovieSelect(item, document.querySelector('#left-summary'));
+    onMovieSelect(item, document.querySelector('#left-summary'), 'left');
   },
 });
 
@@ -40,23 +40,49 @@ createAutoComplete({
   // ONOPTION IS ONMOVIE FUNCTION
   onOptionSelect(item) {
     document.querySelector('.tutorial').classList.add('is-hidden');
-    onMovieSelect(item, document.querySelector('#right-summary'));
+    onMovieSelect(item, document.querySelector('#right-summary'), 'right');
   },
 });
 
 // MOVIE CLICKED
-const onMovieSelect = async (item, summaryElement) => {
+let leftMovie;
+let rightMovie;
+const onMovieSelect = async (item, summaryElement, side) => {
   const response = await axios.get('http://www.omdbapi.com/', {
     params: {
       apikey: '5a3b8379',
       i: item.imdbID,
     },
   });
+
   summaryElement.innerHTML = movieTemplate(response.data);
+
+  if (side === 'left') {
+    leftMovie = response.data;
+  } else {
+    rightMovie = response.data;
+  }
+
+  if (leftMovie && rightMovie) {
+    runComparison();
+  }
 };
+
+const runComparison = () => {};
 
 // MOVIE ITEM STRUCTURE
 const movieTemplate = (item) => {
+  const metaScore = parseInt(item.Metascore);
+  const imdb = parseFloat(item.imdbRating);
+  const votes = parseInt(item.imdbVotes.replace(/,/g, ''));
+  const awards = item.Awards.split(' ').reduce((prev, word) => {
+    const value = parseInt(word);
+    if (isNaN(value)) {
+      return prev;
+    } else {
+      return prev + value;
+    }
+  }, 0);
   return `
   <article class="media">
     <figure class="media-left">
@@ -73,7 +99,7 @@ const movieTemplate = (item) => {
     </div>
   </article>
   
-  <article class="notification is-primary">
+  <article data-value=${awards} class="notification is-primary">
     <p class="title">${item.Awards}</p>
       <p class="subtitle">Awards</p>
   </article>
@@ -83,17 +109,17 @@ const movieTemplate = (item) => {
       <p class="subtitle">Box Office</p>
   </article>
 
-  <article class="notification is-primary">
+  <article data-value=${metaScore} class="notification is-primary">
     <p class="title">${item.Metascore}</p>
       <p class="subtitle">Metascore</p>
   </article>
 
-  <article class="notification is-primary">
+  <article data-value=${imdb} class="notification is-primary">
     <p class="title">${item.imdbRating}</p>
       <p class="subtitle">IMDB Rating</p>
   </article>
 
-  <article class="notification is-primary">
+  <article data-value=${votes} class="notification is-primary">
     <p class="title">${item.imdbVotes}</p>
       <p class="subtitle">IMBD Votes</p>
   </article>

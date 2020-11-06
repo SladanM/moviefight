@@ -46,3 +46,6 @@ figure .image img {
   height: 50px;
   margin-right: 10px;
 }
+.myclass {
+  border-color: black;
+}
